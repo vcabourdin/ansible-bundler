@@ -1,0 +1,13 @@
+---
+- name: Install Ruby (dev version)
+  apt: name=ruby-dev state=latest
+
+- name: Check Bundler version
+  command: bundle -v
+  register: bundler_current
+  ignore_errors: true
+
+- name: Install Bundler
+  # this command can't use Ansible gem module (http://stackoverflow.com/a/22121802/3169999)
+  command: bash -lc "gem install bundler"
+  when: bundler_current.rc != 0
